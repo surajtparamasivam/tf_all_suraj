@@ -10,6 +10,7 @@ from operator import itemgetter
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 import keras
+from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.layers.recurrent import LSTM
@@ -21,7 +22,7 @@ df=pd.DataFrame(features)
 
 def load_data(features,seq_len):
     no_of_features=len(features.columns)
-    # print(no_of_features)
+    print(no_of_features)
     data=features.as_matrix()
     # print(data)
     sequence_length=seq_len+1
@@ -46,6 +47,7 @@ def load_data(features,seq_len):
     # print(y_train)
     return [x_train,y_train,x_test,y_test]
 window=5
+
 x_train,y_train,x_test,y_test=load_data(features,window)
 # x_train = np.reshape(x_train, (x_train.shape[0], 1, x_train.shape[1]))
 model=Sequential()
@@ -54,7 +56,11 @@ print(x_train.shape[0])
 print(y_train.shape[0])
 model.add(LSTM(256,input_shape=(3,1)))
 model.add(Dense(1))
-model.compile(optimizer='adam',loss='mse')
+model.compile(optimizer='ADAM',loss='mse',metrics=['acc'])
 x_train=x_train.reshape((x_train.shape[0],x_train.shape[1],1))
-history= model.fit(x_train,y_train,epochs=300,shuffle=False)
-
+x_test=x_test.reshape((x_test.shape[0],x_test.shape[1],1))
+history= model.fit(x_train,y_train,epochs=5,shuffle=False)
+pred=model.predict(x_test)
+score=model.evaluate(x_train,y_train)
+print("accuracy:",score[1])
+print(pred)
