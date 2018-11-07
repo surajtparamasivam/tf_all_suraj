@@ -11,17 +11,19 @@ from sklearn.metrics import mean_squared_error
 from math import sqrt
 import keras
 from sklearn.preprocessing import MinMaxScaler
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error,r2_score,accuracy_score
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.layers.recurrent import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
+
 dataset=pd.read_csv(r'C:\Users\sparamas\Downloads\flight_delays_train.csv',header=0)
 dataset.columns=['DepTime','Interchange1','Interchange2','DestinationTime']
-
 values=dataset.values
-
+pyplot.plot(dataset)
 encoder=LabelEncoder()
 values[:,3]=encoder.fit_transform(values[:,3])
 print(values[:,3])
@@ -53,8 +55,8 @@ history = model.fit(x_train, y_train, epochs=1, batch_size=72, validation_data=(
 score=model.evaluate(x_test,y_test)
 print("accuracy:",score[0])
 pred=model.predict(x_test)
-from sklearn import linear_model
-from sklearn.metrics import mean_squared_error,r2_score,accuracy_score
+
+
 
 # regr=linear_model.LinearRegression()
 # regr.fit(x_train,y_train)
